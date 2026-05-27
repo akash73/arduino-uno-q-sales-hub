@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arduino UNO Q — Sales Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & tokens ─────────────────────────────────────────
+       Colours taken directly from www.arduino.cc
+       Primary teal   : #00979d  (meta theme-color on arduino.cc)
+       Dark nav bg    : #1a1a1a  (arduino.cc top bar)
+       Accent orange  : #e47128  (store / buy-now CTAs)
+    ──────────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal:         #00979d;
+      --teal-dark:    #007a80;
+      --teal-light:   #d6f2f3;
+      --teal-bg:      #f0fafb;
+      --orange:       #e47128;
+      --dark:         #1a1a1a;
+      --dark-2:       #2d2d2d;
+      --text-primary: #1b1b1b;
+      --text-secondary:#5a5a5a;
+      --text-muted:   #9a9a9a;
+      --border:       #e5e5e5;
+      --border-dark:  #cecece;
+      --bg-page:      #f5f5f3;
+      --bg-card:      #ffffff;
+      --radius:       8px;
+      --radius-sm:    5px;
+      --shadow:       0 2px 12px rgba(0,0,0,.09), 0 1px 3px rgba(0,0,0,.05);
+    }
+    body {
+      font-family: "Nunito", system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      min-height: 100vh;
+      padding: 28px 16px 48px;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    /* ── App shell ──────────────────────────────────────────── */
+    #app {
+      max-width: 1080px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Top nav bar — dark like arduino.cc ─────────────────── */
+    .hub-header {
+      padding: 0 24px;
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 54px;
+    }
+    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .brand-logo {
+      width: 30px; height: 30px;
+      background: var(--teal);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 900; font-size: 15px; flex-shrink: 0;
+    }
+    .brand-name {
+      font-weight: 800; font-size: 14px;
+      color: #ffffff; letter-spacing: -0.2px;
+    }
+    .brand-sub {
+      font-size: 11px; color: rgba(255,255,255,.4);
+      margin-top: 1px; font-weight: 500;
+    }
+    .header-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .nav-pills { display: flex; gap: 2px; }
+    .nav-pill {
+      font-size: 11px; font-weight: 700;
+      padding: 5px 11px; border-radius: 20px;
+      color: rgba(255,255,255,.55); text-decoration: none;
+      transition: color .15s, background .15s;
+    }
+    .nav-pill:hover { color: #fff; background: rgba(255,255,255,.1); }
+    .refresh-btn {
+      font-size: 11px; font-weight: 700; font-family: inherit;
+      padding: 5px 13px; border-radius: 20px;
+      border: 1.5px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.75);
+      background: transparent; cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .refresh-btn:hover    { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.4); color: #fff; }
+    .refresh-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ── Teal accent banner ─────────────────────────────────── */
+    .hub-banner {
+      background: var(--teal);
+      padding: 8px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .hub-banner-text {
+      font-size: 11.5px; font-weight: 700;
+      color: rgba(255,255,255,.92); letter-spacing: 0.1px;
+    }
+    .hub-banner-badge {
+      font-size: 10px; font-weight: 800; letter-spacing: 0.5px;
+      text-transform: uppercase;
+      background: rgba(0,0,0,.15); color: #fff;
+      padding: 2px 10px; border-radius: 20px;
+    }
+
+    /* ── Content sections ───────────────────────────────────── */
+    .content-section {
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+    .section-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding-bottom: 11px;
+      border-bottom: 2px solid var(--text-primary);
+      margin-bottom: 16px;
+    }
+    .section-title-group { display: flex; align-items: center; gap: 10px; }
+    .section-icon { display: none; }
+    .section-label {
+      font-weight: 900; font-size: 18px;
+      color: var(--text-primary); letter-spacing: -0.5px;
+    }
+    .section-count {
+      font-size: 11px; font-weight: 700; color: var(--text-muted);
+      background: #f0f0f0; padding: 2px 9px; border-radius: 20px;
+    }
+    .view-all {
+      font-size: 12px; font-weight: 700;
+      color: var(--teal); text-decoration: none;
+      transition: opacity .15s;
+    }
+    .view-all:hover { opacity: 0.65; }
+    .view-all::after { content: " ↗"; }
+
+    /* ── Items grid ─────────────────────────────────────────── */
+    .items-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Card — editorial left-border accent, like arduino.cc news items */
+    .item-card {
+      padding: 11px 14px 11px 12px;
+      border: 1px solid var(--border);
+      border-left: 3px solid transparent;
+      border-radius: var(--radius);
+      background: #fff;
+      cursor: pointer;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+      transition: border-left-color .15s, background .15s, border-color .15s;
+      user-select: none;
+    }
+    .item-card:hover {
+      border-left-color: var(--teal);
+      background: var(--teal-bg);
+      border-color: var(--teal-light);
+    }
+    .item-card.selected {
+      border-left-color: var(--teal);
+      border-color: var(--teal-light);
+      background: var(--teal-bg);
+    }
+    .item-body { flex: 1; min-width: 0; }
+    .item-title {
+      font-weight: 700; font-size: 12.5px; color: var(--text-primary);
+      margin-bottom: 4px; line-height: 1.38;
+    }
+    .item-meta { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .item-actions {
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: 7px; flex-shrink: 0;
+    }
+
+    /* Tags — styled like arduino.cc category chips */
+    .tag {
+      font-size: 9px; font-weight: 800; letter-spacing: 0.6px;
+      padding: 2px 7px; border-radius: var(--radius-sm);
+      white-space: nowrap; text-transform: uppercase;
+    }
+    .checkbox {
+      width: 16px; height: 16px; border-radius: 4px;
+      border: 1.5px solid #d0d0d0; background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 9px; flex-shrink: 0;
+      transition: background .15s, border-color .15s;
+    }
+    .item-card.selected .checkbox {
+      background: var(--teal); border-color: var(--teal);
+    }
+    .item-card.selected .checkbox::after { content: "✓"; font-weight: 900; }
+
+    /* ── Social section ─────────────────────────────────────── */
+    #social {
+      padding: 22px 28px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+    }
+    .social-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding-bottom: 11px; border-bottom: 2px solid var(--text-primary);
+      margin-bottom: 14px;
+    }
+    .social-icon { display: none; }
+    .social-label {
+      font-weight: 900; font-size: 18px;
+      color: var(--text-primary); letter-spacing: -0.5px;
+    }
+    .social-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .social-btn {
+      font-size: 12px; font-weight: 700;
+      padding: 7px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius); color: var(--text-secondary);
+      text-decoration: none; background: #fafafa;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .social-btn:hover {
+      border-color: var(--teal); color: var(--teal); background: var(--teal-bg);
+    }
+
+    /* ── Share panel ─────────────────────────────────────────── */
+    #share-panel {
+      margin: 20px 28px 28px;
+      background: #fafafa;
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      border: 1.5px solid var(--border);
+    }
+    .share-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .share-title {
+      font-weight: 900; font-size: 15px;
+      color: var(--text-primary); letter-spacing: -0.3px;
+    }
+    .share-count { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .share-count.active { color: var(--teal); }
+    .email-preview {
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px; font-size: 12.5px; font-family: inherit;
+      color: #c0c0c0; margin-bottom: 14px; min-height: 80px;
+      line-height: 1.9; white-space: pre-wrap;
+      transition: border-color .2s;
+    }
+    .email-preview.has-content {
+      color: var(--text-primary); border-color: var(--teal-light);
+    }
+    .share-actions { display: flex; gap: 8px; }
+    .share-btn {
+      flex: 1; padding: 9px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border); background: #fff;
+      font-size: 12px; font-weight: 700; font-family: inherit; cursor: pointer;
+      color: var(--text-secondary);
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .share-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .share-btn:not(:disabled):hover {
+      border-color: var(--teal); color: var(--teal); background: var(--teal-bg);
+    }
+    .share-btn-primary {
+      flex: 0 0 auto; padding: 9px 22px;
+      border-radius: var(--radius); border: none;
+      background: var(--teal); color: #fff;
+      font-size: 12px; font-weight: 800; font-family: inherit; cursor: pointer;
+      letter-spacing: 0.2px; transition: background .15s;
+    }
+    .share-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .share-btn-primary:not(:disabled):hover { background: var(--teal-dark); }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <header class="hub-header">
+    <div class="header-brand">
+      <div class="brand-logo">A</div>
+      <div>
+        <div class="brand-name">Arduino UNO Q — Sales Hub</div>
+        <div class="brand-sub">For the Arduino sales team</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <nav class="nav-pills">
+        <a href="#docs" class="nav-pill">Documentation</a>
+<a href="#blog" class="nav-pill">Blog posts</a>
+<a href="#projects" class="nav-pill">Community projects</a>
+<a href="#video" class="nav-pill">YouTube videos</a>
+<a href="#social" class="nav-pill">Social</a>
+      </nav>
+      <span class="refresh-btn" style="cursor:default;opacity:.6">↺ Auto-updated daily</span>
+    </div>
+  </header>
+  <div class="hub-banner">
+    <span class="hub-banner-text" id="last-updated">Content updated 27 May 2026 at 14:34</span>
+    <span class="hub-banner-badge">Sales Hub</span>
+  </div>
+
+  
+  <section id="docs" class="content-section">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-icon" style="background:#EFF5FD">📄</div>
+        <span class="section-label">Documentation</span>
+        <span class="section-count">10 items</span>
+      </div>
+      <a href="https://docs.arduino.cc/hardware/uno-q/" target="_blank" rel="noreferrer" class="view-all">
+        Open docs site ↗
+      </a>
+    </div>
+    <div class="items-grid">
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Getting started with Arduino UNO Q&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/hardware/uno-q/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Getting started with Arduino UNO Q</div>
+        <div class="item-meta">docs.arduino.cc · Official overview</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q User Manual&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/tutorials/uno-q/user-manual/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q User Manual</div>
+        <div class="item-meta">docs.arduino.cc · Full user guide</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;App Lab \u2014 Getting Started&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/software/app-lab/tutorials/getting-started/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">App Lab — Getting Started</div>
+        <div class="item-meta">docs.arduino.cc · Recently updated</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#D6F5F0;color:#007A68">New</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q as a Single-Board Computer&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/tutorials/uno-q/single-board-computer/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q as a Single-Board Computer</div>
+        <div class="item-meta">docs.arduino.cc · SBC mode guide</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Custom AI Models for App Lab&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/software/app-lab/tutorials/ai-models/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Custom AI Models for App Lab</div>
+        <div class="item-meta">docs.arduino.cc · AI integration</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#D6F5F0;color:#007A68">New</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q datasheet (PDF)&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/resources/datasheets/ABX00162-datasheet.pdf&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q datasheet (PDF)</div>
+        <div class="item-meta">docs.arduino.cc · Full specs ABX00162</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino App CLI \u2014 command line management&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/software/app-lab/tutorials/cli&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino App CLI — command line management</div>
+        <div class="item-meta">docs.arduino.cc · CLI reference</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Connect to UNO Q via SSH&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/tutorials/uno-q/ssh/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Connect to UNO Q via SSH</div>
+        <div class="item-meta">docs.arduino.cc · Remote access</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q Power Specifications&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/tutorials/uno-q/power-specification/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q Power Specifications</div>
+        <div class="item-meta">docs.arduino.cc · Power &amp; hardware</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Connect UNO Q to the Arduino Cloud&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/tutorials/uno-q/arduino-cloud/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Connect UNO Q to the Arduino Cloud</div>
+        <div class="item-meta">docs.arduino.cc · Cloud integration</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#DDEEFF;color:#1A5FA8">Docs</span>
+        <div class="checkbox"></div>
+      </div>
+    </div></div>
+  </section>
+  
+  <section id="blog" class="content-section">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-icon" style="background:#EDF8F5">📰</div>
+        <span class="section-label">Blog posts</span>
+        <span class="section-count">10 items</span>
+      </div>
+      <a href="https://blog.arduino.cc/category/arduino/uno-q/" target="_blank" rel="noreferrer" class="view-all">
+        All UNO Q articles ↗
+      </a>
+    </div>
+    <div class="items-grid">
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;ZenCell: replacing two boards with one, to build a better quality inspection solution&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/26/zencell-replacing-two-boards-with-one-to-build-a-better-quality-inspection-solution/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">ZenCell: replacing two boards with one, to build a better quality inspection solution</div>
+        <div class="item-meta">blog.arduino.cc · May 26, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Old 3D printer becomes new Arduino UNO Q-controlled pen plotter&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/19/old-3d-printer-becomes-new-arduino-uno-q-controlled-pen-plotter/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Old 3D printer becomes new Arduino UNO Q-controlled pen plotter</div>
+        <div class="item-meta">blog.arduino.cc · May 19, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Nibsy makes manual project documentation obsolete&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/13/nibsy-makes-manual-project-documentation-obsolete/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Nibsy makes manual project documentation obsolete</div>
+        <div class="item-meta">blog.arduino.cc · May 13, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;BirdFeedR is a bird-only feeder that keeps thieving squirrels away&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/12/birdfeedr-is-a-bird-only-feeder-that-keeps-thieving-squirrels-away/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">BirdFeedR is a bird-only feeder that keeps thieving squirrels away</div>
+        <div class="item-meta">blog.arduino.cc · May 12, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;How FermiLabs builds championship-level robots with Arduino&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/08/how-fermilabs-builds-championship-level-robots-with-arduino/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">How FermiLabs builds championship-level robots with Arduino</div>
+        <div class="item-meta">blog.arduino.cc · May 8, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Real talk: building with Arduino UNO Q&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/08/real-talk-building-with-arduino-uno-q/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Real talk: building with Arduino UNO Q</div>
+        <div class="item-meta">blog.arduino.cc · May 8, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;One board, two brains? Three ways a dual architecture board makes building simpler&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/05/07/one-board-two-brains-three-ways-a-dual-architecture-board-makes-building-simpler/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">One board, two brains? Three ways a dual architecture board makes building simpler</div>
+        <div class="item-meta">blog.arduino.cc · May 7, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;A robot arm that recognizes your face&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/04/29/a-robot-arm-that-recognizes-your-face/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">A robot arm that recognizes your face</div>
+        <div class="item-meta">blog.arduino.cc · Apr 29, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino\u00ae App Lab 0.7: Custom Bricks are here!&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/04/29/arduino-app-lab-0-7-custom-bricks-are-here/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino® App Lab 0.7: Custom Bricks are here!</div>
+        <div class="item-meta">blog.arduino.cc · Apr 29, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">AppLab</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Power Pet: a VR companion at your side&quot;, &quot;url&quot;: &quot;https://blog.arduino.cc/2026/04/28/power-pet-a-vr-companion-at-your-side/&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Power Pet: a VR companion at your side</div>
+        <div class="item-meta">blog.arduino.cc · Apr 28, 2026</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#E0F4F4;color:#006B6E">UNO Q</span>
+        <div class="checkbox"></div>
+      </div>
+    </div></div>
+  </section>
+  
+  <section id="projects" class="content-section">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-icon" style="background:#FEF5EE">🔧</div>
+        <span class="section-label">Community projects</span>
+        <span class="section-count">10 items</span>
+      </div>
+      <a href="https://projecthub.arduino.cc/" target="_blank" rel="noreferrer" class="view-all">
+        Project Hub ↗
+      </a>
+    </div>
+    <div class="items-grid">
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;AI Projects with UNO Q&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/uid03055/ai-projects-with-uno-q-ebadc6&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">AI Projects with UNO Q</div>
+        <div class="item-meta">projecthub.arduino.cc · LLM &amp; Agents</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q Arcade Cabinet (RetroArch)&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/jcarolinares/39dd389d-d36f-48ab-9434-058abf6039b1&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q Arcade Cabinet (RetroArch)</div>
+        <div class="item-meta">projecthub.arduino.cc · Gaming</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Desk Robot with AI Chat &amp; Videotronic OS&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/Tishin/uno-q-desk-robot-with-full-ai-chat-and-videotronic-os-phase-1-caea81&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Desk Robot with AI Chat &amp; Videotronic OS</div>
+        <div class="item-meta">projecthub.arduino.cc · Robotics</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Real-time Ultrasonic Sonar with Web UI&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/robuinlabs/arduino-uno-q-radar-project-build-a-real-time-ultrasonic-sonar-with-web-interface-ffbb9d&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Real-time Ultrasonic Sonar with Web UI</div>
+        <div class="item-meta">projecthub.arduino.cc · Sensors</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Greetings from Arduino UNO Q&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/leocavagnis/greetings-from-arduino-uno-q-6a403b&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Greetings from Arduino UNO Q</div>
+        <div class="item-meta">projecthub.arduino.cc · Starter</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q Local Weather Station&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/Arduino_Genuino/arduino-uno-q-local-weather-station-b771ee&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q Local Weather Station</div>
+        <div class="item-meta">projecthub.arduino.cc · IoT</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Inverted Pendulum: PID Control + UI&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/Arduino_Genuino/arduino-uno-q-inverted-pendulum-pid-ui-e8833f&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Inverted Pendulum: PID Control + UI</div>
+        <div class="item-meta">projecthub.arduino.cc · Control</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Modulino LED Matrix \u2014 Pixel Canvas&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/mario-r/uno-q-modulino-led-matrix-pixel-canvas-6a663e&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Modulino LED Matrix — Pixel Canvas</div>
+        <div class="item-meta">projecthub.arduino.cc · Display</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Gemini Voice Assistant for Smart Home&quot;, &quot;url&quot;: &quot;https://projecthub.arduino.cc/volt-23/talk-to-your-house-a-gemini-powered-voice-assistant-on-arduino-uno-q-0d3a37&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Gemini Voice Assistant for Smart Home</div>
+        <div class="item-meta">projecthub.arduino.cc · Voice AI</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Connect to UNO Q via ADB&quot;, &quot;url&quot;: &quot;https://docs.arduino.cc/tutorials/uno-q/adb&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Connect to UNO Q via ADB</div>
+        <div class="item-meta">docs.arduino.cc · Developer tools</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FEF0E6;color:#B85B1A">Project</span>
+        <div class="checkbox"></div>
+      </div>
+    </div></div>
+  </section>
+  
+  <section id="video" class="content-section">
+    <div class="section-header">
+      <div class="section-title-group">
+        <div class="section-icon" style="background:#FDEEED">▶️</div>
+        <span class="section-label">YouTube videos</span>
+        <span class="section-count">0 items</span>
+      </div>
+      <a href="https://www.youtube.com/playlist?list=PLT6rF_I5kknOOmiHEU8onj1X0Ad5BzaFr" target="_blank" rel="noreferrer" class="view-all">
+        Full playlist ↗
+      </a>
+    </div>
+    <div class="items-grid"></div>
+  </section>
+
+  <section id="social">
+    <div class="social-header">
+      <span class="social-label">Social channels</span>
+      <a href="https://www.arduino.cc" target="_blank" rel="noreferrer" class="view-all">arduino.cc</a>
+    </div>
+    <div class="social-links"><a href="https://www.youtube.com/arduino" target="_blank" rel="noreferrer" class="social-btn">YouTube ↗</a>
+<a href="https://www.instagram.com/arduino.cc/" target="_blank" rel="noreferrer" class="social-btn">Instagram ↗</a>
+<a href="https://www.linkedin.com/company/arduino/" target="_blank" rel="noreferrer" class="social-btn">LinkedIn ↗</a>
+<a href="https://www.facebook.com/official.arduino" target="_blank" rel="noreferrer" class="social-btn">Facebook ↗</a></div>
+  </section>
+
+  <div id="share-panel">
+    <div class="share-header">
+      <span class="share-title">📤 Share with a customer</span>
+      <span class="share-count" id="sel-count">0 items selected</span>
+    </div>
+    <div class="email-preview" id="email-preview">
+      Select content above to share — a ready-to-send message will appear here.
+    </div>
+    <div class="share-actions">
+      <button class="share-btn"       id="btn-links" onclick="copyLinks()"  disabled>Copy links</button>
+      <button class="share-btn"       id="btn-email" onclick="copyEmail()"  disabled>Copy email message</button>
+      <button class="share-btn-primary" id="btn-clear" onclick="clearAll()"   disabled>Clear selection</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const selected = new Map();
+
+  function toggleItem(card) {
+    const key  = card.dataset.key;
+    const data = JSON.parse(key);
+    if (selected.has(key)) { selected.delete(key); card.classList.remove("selected"); }
+    else                   { selected.set(key, data); card.classList.add("selected"); }
+    updatePanel();
+  }
+
+  function updatePanel() {
+    const items = [...selected.values()];
+    const count = items.length;
+    document.getElementById("sel-count").textContent = count + " item" + (count !== 1 ? "s" : "") + " selected";
+    document.getElementById("sel-count").classList.toggle("active", count > 0);
+    const preview = document.getElementById("email-preview");
+    if (count === 0) { preview.textContent = "Select content above to share — a ready-to-send message will appear here."; preview.classList.remove("has-content"); }
+    else             { preview.textContent = buildEmail(items); preview.classList.add("has-content"); }
+    ["btn-links", "btn-email", "btn-clear"].forEach(id => document.getElementById(id).disabled = count === 0);
+  }
+
+  function buildEmail(items) {
+    const lines = items.map(i => "• " + i.title + "\n  " + i.url).join("\n");
+    return "Hi,\n\nI wanted to share some resources about the Arduino UNO Q that you might find useful:\n\n" + lines + "\n\nLet me know if you have any questions!";
+  }
+
+  function copyLinks()  { copyToClipboard([...selected.values()].map(i => i.title + ": " + i.url).join("\n"), "btn-links", "Copy links"); }
+  function copyEmail()  { copyToClipboard(buildEmail([...selected.values()]), "btn-email", "Copy email message"); }
+
+  function copyToClipboard(text, btnId, label) {
+    const done = () => { const b = document.getElementById(btnId); b.textContent = "✓ Copied!"; setTimeout(() => b.textContent = label, 2000); };
+    navigator.clipboard.writeText(text).then(done).catch(() => {
+      const ta = Object.assign(document.createElement("textarea"), {value: text, style: "position:fixed;opacity:0"});
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done();
+    });
+  }
+
+  function clearAll() { selected.clear(); document.querySelectorAll(".item-card.selected").forEach(c => c.classList.remove("selected")); updatePanel(); }
+
+  // ── Refresh button ─────────────────────────────────────────────────────────
+  function triggerRefresh() {
+    const btn = document.getElementById("btn-refresh");
+    const sub = document.getElementById("last-updated");
+    btn.disabled = true;
+    btn.textContent = "↺ Refreshing…";
+    sub.textContent = "Fetching latest content — this takes about 30 seconds…";
+    fetch("/refresh", {method:"POST"})
+      .then(r => r.json())
+      .then(() => {
+        sub.textContent = "Refresh started — reloading in 35 seconds…";
+        setTimeout(() => window.location.reload(), 35000);
+      })
+      .catch(() => {
+        btn.disabled = false;
+        btn.textContent = "↺ Refresh";
+        sub.textContent = "Refresh failed — is the board online?";
+      });
+  }
+</script>
+</body>
+</html>
