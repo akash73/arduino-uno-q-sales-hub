@@ -1,0 +1,35 @@
+name: Update Sales Hub Content
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # ogni giorno alle 6:00 UTC
+  workflow_dispatch:        # trigger manuale dal tab "Actions" su GitHub
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 feedparser
+
+      - name: Fetch content & generate HTML
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python python/generate_static.py
+
+      - name: Commit updated page
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: auto-update sales hub content'
+          file_pattern: 'docs/index.html'

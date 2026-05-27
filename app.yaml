@@ -1,0 +1,7 @@
+name: Arduino UNO Q Sales Hub
+description: "Daily-refreshed dashboard of all UNO Q public content for the Arduino sales team"
+icon: 📊
+version: "1.0.0"
+ports:
+  - 8080
+bricks: []
