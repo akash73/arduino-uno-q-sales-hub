@@ -8,25 +8,25 @@ import os
 # Enable "YouTube Data API v3" → Create credentials → API key
 YOUTUBE_API_KEY    = "AIzaSyDejNnCetqMy0WNRLtPN29vQ29AMRFd5rM"
 YOUTUBE_PLAYLIST_ID = "PLT6rF_I5kknOOmiHEU8onj1X0Ad5BzaFr"
-YOUTUBE_MAX_RESULTS = 10
+YOUTUBE_MAX_RESULTS = 15
 
 # ── Docs ──────────────────────────────────────
 DOCS_URL       = "https://docs.arduino.cc/hardware/uno-q/"
-DOCS_MAX_ITEMS = 10
+DOCS_MAX_ITEMS = 15
 
 # ── Blog RSS feeds ────────────────────────────
 BLOG_FEEDS = [
     {"url": "https://blog.arduino.cc/category/arduino/uno-q/feed/",   "tag": "UNO Q"},
     {"url": "https://blog.arduino.cc/category/arduino/app-lab/feed/", "tag": "AppLab"},
 ]
-BLOG_MAX_ITEMS = 10
+BLOG_MAX_ITEMS = 15
 
 # ── Project Hub ───────────────────────────────
 PROJECTHUB_URLS = [
     "https://projecthub.arduino.cc/?q=uno+q",
     "https://projecthub.arduino.cc/?q=uno-q",
 ]
-PROJECTHUB_MAX_ITEMS = 10
+PROJECTHUB_MAX_ITEMS = 15
 
 # ── Social channels (static — no API needed) ─
 SOCIAL_LINKS = [
@@ -41,6 +41,13 @@ BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR  = os.path.join(BASE_DIR, "data")
 WWW_DIR   = os.path.join(BASE_DIR, "www")
 HTML_FILE = os.path.join(WWW_DIR, "index.html")
+
+# ── GitHub Pages publish ──────────────────────
+# Token needs 'repo' scope — github.com/settings/tokens
+GITHUB_TOKEN     = ""           # es. "ghp_xxxxxxxxxxxx"
+GITHUB_REPO      = "akash73/arduino-uno-q-sales-hub"
+GITHUB_BRANCH    = "main"
+GITHUB_FILE_PATH = "docs/index.html"
 
 # ── Web server ────────────────────────────────
 SERVER_PORT = 8080
