@@ -305,11 +305,11 @@
 <a href="#video" class="nav-pill">YouTube videos</a>
 <a href="#social" class="nav-pill">Social</a>
       </nav>
-      <span class="refresh-btn" style="cursor:default;opacity:.6">↺ Auto-updated daily</span>
+      <button class="refresh-btn" id="btn-refresh" onclick="triggerRefresh()">↺ Refresh</button>
     </div>
   </header>
   <div class="hub-banner">
-    <span class="hub-banner-text" id="last-updated">Content updated 28 May 2026 at 09:55</span>
+    <span class="hub-banner-text" id="last-updated">Content updated 28 May 2026 at 13:36</span>
     <span class="hub-banner-badge">Sales Hub</span>
   </div>
 
@@ -688,13 +688,122 @@
       <div class="section-title-group">
         <div class="section-icon" style="background:#FDEEED">▶️</div>
         <span class="section-label">YouTube videos</span>
-        <span class="section-count">0 items</span>
+        <span class="section-count">10 items</span>
       </div>
       <a href="https://www.youtube.com/playlist?list=PLT6rF_I5kknOOmiHEU8onj1X0Ad5BzaFr" target="_blank" rel="noreferrer" class="view-all">
         Full playlist ↗
       </a>
     </div>
-    <div class="items-grid"></div>
+    <div class="items-grid">
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Introducing Arduino UNO Q&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=QxPBCBX8ac8&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Introducing Arduino UNO Q</div>
+        <div class="item-meta">YouTube · 1:26 · 172.5k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;UNO Q and Arduino App Lab: Your Next Idea Starts with Q&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=p2OpvfR2xfI&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">UNO Q and Arduino App Lab: Your Next Idea Starts with Q</div>
+        <div class="item-meta">YouTube · 1:30 · 16.9k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino UNO Q: Up and Running in 5 Minutes&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=IqSJPvpNnso&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino UNO Q: Up and Running in 5 Minutes</div>
+        <div class="item-meta">YouTube · 3:24 · 13.0k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino App Lab: Getting Started&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=uN2Ro-nJjds&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino App Lab: Getting Started</div>
+        <div class="item-meta">YouTube · 3:01 · 11.2k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino App Lab: What Are Bricks?&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=z-RpEmCiEwI&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino App Lab: What Are Bricks?</div>
+        <div class="item-meta">YouTube · 2:35 · 3.3k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;All-In-One Development Workflow with Arduino UNO Q&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=yvIDZHcCZWI&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">All-In-One Development Workflow with Arduino UNO Q</div>
+        <div class="item-meta">YouTube · 3:24 · 2.4k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino Global Event - From Blink to Think&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=uYb8YzdMWbc&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino Global Event - From Blink to Think</div>
+        <div class="item-meta">YouTube · 2:13:32 · 23.7k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;NEVER Lose a Tool Again Using Arduino UNO Q!!!&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=wOOF-MD0WIo&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">NEVER Lose a Tool Again Using Arduino UNO Q!!!</div>
+        <div class="item-meta">YouTube · 12:08 · 91.0k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;ARDUINO UNO Q Face Controlled Car&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=EGDxAXpH_Ag&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">ARDUINO UNO Q Face Controlled Car</div>
+        <div class="item-meta">YouTube · 18:32 · 85.9k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div>
+
+    <div class="item-card" data-key='{&quot;title&quot;: &quot;Arduino Uno Q unboxing &amp; Zephyr RTOS deep dive&quot;, &quot;url&quot;: &quot;https://www.youtube.com/watch?v=1_Ps6Rv7nhM&quot;}' onclick="toggleItem(this)">
+      <div class="item-body">
+        <div class="item-title">Arduino Uno Q unboxing &amp; Zephyr RTOS deep dive</div>
+        <div class="item-meta">YouTube · 41:18 · 7.4k views</div>
+      </div>
+      <div class="item-actions">
+        <span class="tag" style="background:#FDECEA;color:#B03020">Video</span>
+        <div class="checkbox"></div>
+      </div>
+    </div></div>
   </section>
 
   <section id="social">
